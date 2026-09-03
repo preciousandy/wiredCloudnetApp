@@ -474,29 +474,10 @@ export const authService = {
         path: '/auth/2fa/send-otp',
         body: { email: cleanEmail, identity: cleanEmail, type: 'email' },
         schema: challengeSchema,
-        auth: true,
-        silent404: true,
+        auth: false,
       });
     } catch {
-      try {
-        return await request({
-          method: 'POST',
-          path: '/send-signup-otp',
-          body: { email: cleanEmail, identity: cleanEmail, type: 'email' },
-          schema: challengeSchema,
-          auth: false,
-          silent404: true,
-        });
-      } catch {
-        return await request({
-          method: 'POST',
-          path: '/auth/register/start',
-          body: { email: cleanEmail, identity: cleanEmail, type: 'email' },
-          schema: challengeSchema,
-          auth: false,
-          silent404: true,
-        }).catch(() => mockAuth.startRegistration(cleanEmail));
-      }
+      return mockAuth.startRegistration(cleanEmail);
     }
   },
 
@@ -511,29 +492,10 @@ export const authService = {
         path: '/auth/2fa/verify',
         body: { email: cleanEmail, code: otpCode, otp: otpCode, challengeId: cleanEmail },
         schema: verificationSchema,
-        auth: true,
-        silent404: true,
+        auth: false,
       });
     } catch {
-      try {
-        return await request({
-          method: 'POST',
-          path: '/verify-signup-otp',
-          body: { email: cleanEmail, code: otpCode, otp: otpCode, challengeId: cleanEmail },
-          schema: verificationSchema,
-          auth: false,
-          silent404: true,
-        });
-      } catch {
-        return await request({
-          method: 'POST',
-          path: '/auth/register/verify',
-          body: { email: cleanEmail, code: otpCode, otp: otpCode, challengeId: cleanEmail },
-          schema: verificationSchema,
-          auth: false,
-          silent404: true,
-        }).catch(() => mockAuth.verifyOtp(cleanEmail, otpCode));
-      }
+      return mockAuth.verifyOtp(cleanEmail, otpCode);
     }
   },
 };
